@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.scroll-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.scroll-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
