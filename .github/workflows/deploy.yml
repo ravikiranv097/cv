@@ -1,0 +1,36 @@
+name: Deploy React app
+
+on:
+  push:
+    branches:
+      - runner-test
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, rkv]
+
+    env:
+      CONTAINER_NAME: cv-app
+      IMAGE_NAME: cv-app
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build --pull -t "$IMAGE_NAME:$GITHUB_SHA" .
+
+      - name: Replace running container
+        run: |
+          if docker container inspect "$CONTAINER_NAME" >/dev/null 2>&1; then
+            if [ "$(docker container inspect --format='{{.State.Running}}' "$CONTAINER_NAME")" = "true" ]; then
+              docker stop "$CONTAINER_NAME"
+            fi
+            docker rm "$CONTAINER_NAME"
+          fi
+
+          docker run --detach \
+            --name "$CONTAINER_NAME" \
+            --restart unless-stopped \
+            --network host \
+            "$IMAGE_NAME:$GITHUB_SHA"
