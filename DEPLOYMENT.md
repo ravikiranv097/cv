@@ -2,7 +2,7 @@
 
 The workflow builds the app image and runs it with Docker host networking. The production app listens on TCP port 3000, so access it at `http://<server-ip>:3000`. Ensure that port is allowed by the server firewall.
 
-## Prepare the server
+## Prepare the server...
 
 Install Docker Engine first and verify `docker info` succeeds as an administrator. Then run this repository's account setup script as root:
 
